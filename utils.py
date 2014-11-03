@@ -11,12 +11,12 @@ MONTH_TO_NUM = { "jan": 1, "feb": 2, "mar": 3, \
 				 "oct": 10, "nov": 11, "dec": 12 }
 
 # for future updates
-DAY_TO_NUM = { "sunday": 1, "monday": 2, "tueday": 3 \
-			   "wed": 4, "thu": 5, "fri": 6 \
-			   "sat": 7 }
+DAY_TO_NUM = { "sunday": 1, "monday": 2, "tueday": 3, \
+			   "wednesday": 4, "thursday": 5, "friday": 6, \
+			   "saturday": 7 }
 
-NUM_TO_DAY = { 1: "sunday", 2: "monday", 3: "tuesday" \
-			   4: "wednesday", 5: "thursday", 6: "friday" \
+NUM_TO_DAY = { 1: "sunday", 2: "monday", 3: "tuesday", \
+			   4: "wednesday", 5: "thursday", 6: "friday", \
 			   7: "saturday" }
 
 MONTH_FIRST = 1
@@ -27,7 +27,7 @@ YEAR_LEAP = 366
 def isLeapYear(year):
 	if (year % 4 == 0):
 		if (year % 100 == 0):
-			if (year % mod 400 == 0):
+			if (year % 400 == 0):
 				return True
 			else:
 				return False
@@ -36,7 +36,7 @@ def isLeapYear(year):
 	else:
 		return False
 
-def convertMonth(month):
+#def convertMonth(month):
 
 #return days in difference of days
 def differenceDays(day1, day2):
@@ -56,6 +56,8 @@ def daysExcess(day):
 # return days in difference of months
 def differenceMonths(month1, month2, inclusiveStart=True, inclusiveEnd=False):
 	#assert!!!
+	if month2 < month1: #strange, I don't know if I need this
+		return differenceMonths(month2, month1)
 	counter = 0
 	if not inclusiveStart:
 		month1 += 1
@@ -66,9 +68,11 @@ def differenceMonths(month1, month2, inclusiveStart=True, inclusiveEnd=False):
 	return counter
 
 # return days in difference of years
-def differenceYears(year1, year2):
+def differenceYears(year1, year2, inclusiveStart=False):
 	#assert
 	counter = 0
+	if not inclusiveStart:
+		year1 += 1
 	for num in range(year1, year2):
 		if isLeapYear(num):
 			counter += YEAR_LEAP
@@ -90,5 +94,38 @@ def endYear(month, day):
 	counter += differenceMonths(month, MONTH_LAST, inclusiveStart=False, inclusiveEnd=True)
 	return counter
 
-def validDate(date):
+def isvalidDate(date):
+	month, day, year = date
+	if year < 0:
+		return False
+	if month < MONTH_FIRST or month > MONTH_LAST:
+		return False
+	if MONTHS_TO_DAYS[month] < day:
+		return False
+	return True
 
+def parse(strDate):
+	date = tuple(int(x) for x in strDate.replace('/', ' ').split())
+	if isvalidDate(date):
+		return date
+	else:
+		return (0, 0, 0) # or possibly exception???
+
+def difference(date1, date2):
+	data1 = parse(date1) 
+	data2 = parse(date2)
+	month1, day1, year1 = data1
+	month2, day2, year2 = data2
+	counter = 0
+	if month1 == month2 and year1 == year2:
+		counter += differenceDays(day1, day2)
+	elif year1 == year2:
+		counter += daysLeft(month1, day1)
+		counter += differenceMonths(month1, month2)
+		counter += daysExcess(day2)
+	else:
+		counter += endYear(month1, day1)
+		counter += differenceYears(year1, year2)
+		counter += startYear(month2, day2)
+	# counter *= 60 * 60 * 24 # calculations in seconds
+	return counter
