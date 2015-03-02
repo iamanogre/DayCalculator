@@ -116,6 +116,11 @@ def difference(date1, date2):
 	data2 = parse(date2)
 	month1, day1, year1 = data1
 	month2, day2, year2 = data2
+	return differenceManual(month1, day1, year1, month2, day2, year2)
+
+def differenceManual(month1, day1, year1, month2, day2, year2):
+	if year1 > year2:
+		return 0
 	counter = 0
 	if month1 == month2 and year1 == year2:
 		counter += differenceDays(day1, day2)
@@ -127,5 +132,5 @@ def difference(date1, date2):
 		counter += endYear(month1, day1)
 		counter += differenceYears(year1, year2)
 		counter += startYear(month2, day2)
-	# counter *= 60 * 60 * 24 # calculations in seconds
+		#counter *= 60 * 60 * 24 # calculations in seconds
 	return counter
