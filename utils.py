@@ -25,18 +25,10 @@ YEAR_STANDARD = 365
 YEAR_LEAP = 366
 
 def isLeapYear(year):
-	if (year % 4 == 0):
-		if (year % 100 == 0):
-			if (year % 400 == 0):
-				return True
-			else:
-				return False
-		else:
-			return True
+	if year % 4 == 0 and year % 100 != 0 or year % 400 == 0:
+		return True
 	else:
 		return False
-
-#def convertMonth(month):
 
 #return days in difference of days
 def differenceDays(day1, day2):
@@ -119,6 +111,12 @@ def difference(date1, date2):
 	return differenceManual(month1, day1, year1, month2, day2, year2)
 
 def differenceManual(month1, day1, year1, month2, day2, year2):
+	date1 = month1, day1, year1
+	date2 = month2, day2, year2
+	if not isvalidDate(date1):
+		return -1
+	if not isvalidDate(date2):
+		return -1
 	if year1 > year2:
 		return 0
 	counter = 0
@@ -132,5 +130,4 @@ def differenceManual(month1, day1, year1, month2, day2, year2):
 		counter += endYear(month1, day1)
 		counter += differenceYears(year1, year2)
 		counter += startYear(month2, day2)
-		#counter *= 60 * 60 * 24 # calculations in seconds
 	return counter

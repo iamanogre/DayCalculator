@@ -65,7 +65,10 @@ def main():
 					int(todayMonth.get()),
 					int(todayDay.get()), 
 					int(todayYear.get()) )
-		string = str(days) + " Days Young!"
+		if days == -1:
+			string = "Incorrect Date"
+		else:
+			string = str(days) + " Days Old!"
 		text.insert(END, string)
 
 	submit = Button(root, text ="Submit", command = calculate)
